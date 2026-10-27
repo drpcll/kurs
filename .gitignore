@@ -1,0 +1,12 @@
+# Сборка
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Прочее
+*.log
+Thumbs.db
+desktop.ini
