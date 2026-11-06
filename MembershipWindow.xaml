@@ -1,0 +1,104 @@
+<Window x:Class="FitnessClub.MembershipWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Фитнес-клуб — Мой абонемент"
+        Width="1020" Height="740"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BgBrush}"
+        FontFamily="{StaticResource AppFont}"
+        TextOptions.TextFormattingMode="Display">
+
+    <Border Background="{StaticResource BgBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{StaticResource PanelBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid Margin="28,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="ФИТНЕС-КЛУБ" FontSize="16" FontWeight="Bold"
+                                   Foreground="{StaticResource AccentSoftBrush}"/>
+                        <Rectangle Width="1" Height="20" Fill="{StaticResource BorderBrush}" Margin="18,0"/>
+                        <TextBlock Text="Мой абонемент" FontSize="13"
+                                   Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock x:Name="UserText" FontSize="13"
+                                   Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
+                        <Button Content="Назад" Style="{StaticResource GhostButton}"
+                                Margin="18,0,10,0" Click="Back_Click"/>
+                        <Button Content="✕" Style="{StaticResource CloseButton}" Click="Back_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="32,24,32,24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <StackPanel>
+                        <TextBlock Text="Абонемент" Style="{StaticResource H1}" FontSize="26"/>
+                        <TextBlock Text="Текущий абонемент и история оформлений."
+                                   Style="{StaticResource Muted}" Margin="0,6,0,0"/>
+                    </StackPanel>
+                    <Button Content="Обновить" Style="{StaticResource SecondaryButton}"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Click="Refresh_Click"/>
+                </Grid>
+
+                <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock x:Name="TypeText" FontSize="22" FontWeight="Bold"
+                                       Foreground="{StaticResource TextBrush}"/>
+                            <TextBlock x:Name="StatusText" FontSize="13" Margin="0,8,0,0"
+                                       Foreground="{StaticResource AccentSoftBrush}"/>
+                            <TextBlock x:Name="PeriodText" Style="{StaticResource Muted}"
+                                       Margin="0,10,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <TextBlock x:Name="DaysText" FontSize="30" FontWeight="Bold"
+                                       Foreground="{StaticResource AccentSoftBrush}"
+                                       HorizontalAlignment="Right"/>
+                            <TextBlock Text="дней осталось" Style="{StaticResource Muted}"
+                                       HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="2" Text="История абонементов" Style="{StaticResource H2}"
+                           Margin="0,26,0,10"/>
+
+                <DataGrid Grid.Row="3" x:Name="MembershipGrid" Style="{StaticResource DarkDataGrid}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="*"/>
+                        <DataGridTextColumn Header="Начало" Binding="{Binding StartText}" Width="120"/>
+                        <DataGridTextColumn Header="Окончание" Binding="{Binding EndText}" Width="120"/>
+                        <DataGridTextColumn Header="Стоимость" Binding="{Binding CostText}" Width="120"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock Grid.Row="4" x:Name="FooterText" Style="{StaticResource Muted}"
+                           Margin="0,12,0,0"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

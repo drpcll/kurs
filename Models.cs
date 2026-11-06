@@ -4,109 +4,275 @@ using System.Globalization;
 
 namespace FitnessClub
 {
-    /// <summary>Строка списка ближайших занятий.</summary>
+    // =====================================================================
+    //  Сущности базы данных (соответствуют таблицам KURS_*)
+    // =====================================================================
+
+    public class Klient
+    {
+        public int Id { get; set; }
+        public string Familiya { get; set; }
+        public string Imya { get; set; }
+        public string Telefon { get; set; }
+
+        public override string ToString()
+        {
+            return (Familiya + " " + Imya).Trim();
+        }
+    }
+
+    public class Polzovatel
+    {
+        public int Id { get; set; }
+        public int KlientId { get; set; }
+        public string Login { get; set; }
+        public string Parol { get; set; }
+        public string Rol { get; set; }
+    }
+
+    public class Administrator
+    {
+        public int Id { get; set; }
+        public string Login { get; set; }
+        public string Parol { get; set; }
+        public string Familiya { get; set; }
+    }
+
+    public class TipAbonementa
+    {
+        public int Id { get; set; }
+        public string Nazvanie { get; set; }
+        public decimal Stoimost { get; set; }
+        public int Srok { get; set; }
+
+        public override string ToString()
+        {
+            return Nazvanie + " · " + Srok + " дн. · " + Fmt.Money(Stoimost);
+        }
+    }
+
+    public class Abonement
+    {
+        public int Id { get; set; }
+        public int KlientId { get; set; }
+        public int TipId { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+    }
+
+    public class Spetsializatsiya
+    {
+        public int Id { get; set; }
+        public string Nazvanie { get; set; }
+
+        public override string ToString()
+        {
+            return Nazvanie;
+        }
+    }
+
+    public class Trener
+    {
+        public int Id { get; set; }
+        public string Familiya { get; set; }
+        public int SpetsId { get; set; }
+        public int Stazh { get; set; }
+
+        public override string ToString()
+        {
+            return Familiya;
+        }
+    }
+
+    public class Zal
+    {
+        public int Id { get; set; }
+        public string Nazvanie { get; set; }
+        public int Vmestimost { get; set; }
+
+        public override string ToString()
+        {
+            return Nazvanie;
+        }
+    }
+
+    public class Zanyatie
+    {
+        public int Id { get; set; }
+        public int TrenerId { get; set; }
+        public int ZalId { get; set; }
+        public DateTime Data { get; set; }
+        public string Vremya { get; set; }   // "HH:mm"
+        public string Nazvanie { get; set; }
+    }
+
+    public class Poseshchenie
+    {
+        public int Id { get; set; }
+        public int KlientId { get; set; }
+        public int ZanyatieId { get; set; }
+        public DateTime Data { get; set; }
+        public string Otmetka { get; set; }  // Записан / Пришёл / Не пришёл
+    }
+
+    /// <summary>Корневой объект автономного хранилища.</summary>
+    public class LocalData
+    {
+        public List<Klient> Klients { get; set; }
+        public List<Polzovatel> Polzovateli { get; set; }
+        public List<Administrator> Administratory { get; set; }
+        public List<TipAbonementa> Tipy { get; set; }
+        public List<Abonement> Abonementy { get; set; }
+        public List<Spetsializatsiya> Spetsializatsii { get; set; }
+        public List<Trener> Trenery { get; set; }
+        public List<Zal> Zaly { get; set; }
+        public List<Zanyatie> Zanyatiya { get; set; }
+        public List<Poseshchenie> Poseshcheniya { get; set; }
+    }
+
+    /// <summary>Текущая сессия пользователя.</summary>
+    public static class Session
+    {
+        public static string Role { get; set; }
+        public static int KlientId { get; set; }
+        public static int AdminId { get; set; }
+        public static string DisplayName { get; set; }
+        public static string Login { get; set; }
+
+        public static bool IsAdmin { get { return Role == "Admin"; } }
+        public static bool IsClient { get { return Role == "Client"; } }
+    }
+
+    // =====================================================================
+    //  Строки для таблиц и списков интерфейса
+    // =====================================================================
+
     public class LessonRow
     {
+        public int Id { get; set; }
         public string When { get; set; }
+        public string DateText { get; set; }
+        public string TimeText { get; set; }
         public string Title { get; set; }
         public string Trainer { get; set; }
         public string Hall { get; set; }
         public string Seats { get; set; }
+        public int FreeSeats { get; set; }
+        public bool IsBooked { get; set; }
+        public bool CanBook { get; set; }
+        public string ButtonText { get; set; }
     }
 
-    /// <summary>Строка таблицы клиентов (панель администратора).</summary>
     public class ClientRow
     {
+        public int Id { get; set; }
         public string Familiya { get; set; }
         public string Imya { get; set; }
         public string Telefon { get; set; }
         public string Abonement { get; set; }
         public string Status { get; set; }
+        public string Login { get; set; }
+        public string Fio { get { return (Familiya + " " + Imya).Trim(); } }
+
+        public override string ToString()
+        {
+            return Fio;
+        }
     }
 
-    /// <summary>Демонстрационные данные, совпадающие с тестовым набором базы данных.</summary>
-    public static class DemoData
+    public class BookingRow
+    {
+        public int Id { get; set; }
+        public int LessonId { get; set; }
+        public string DateText { get; set; }
+        public string TimeText { get; set; }
+        public string Title { get; set; }
+        public string Trainer { get; set; }
+        public string Hall { get; set; }
+        public string Status { get; set; }
+        public bool CanCancel { get; set; }
+    }
+
+    public class MembershipRow
+    {
+        public int Id { get; set; }
+        public int KlientId { get; set; }
+        public string Client { get; set; }
+        public string Type { get; set; }
+        public string StartText { get; set; }
+        public string EndText { get; set; }
+        public string CostText { get; set; }
+        public string Status { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class VisitRow
+    {
+        public int Id { get; set; }
+        public string DateText { get; set; }
+        public string TimeText { get; set; }
+        public string Title { get; set; }
+        public string Trainer { get; set; }
+        public string Hall { get; set; }
+        public string Mark { get; set; }
+    }
+
+    public class LessonBookingRow
+    {
+        public int Id { get; set; }
+        public string Client { get; set; }
+        public string Phone { get; set; }
+        public string Mark { get; set; }
+    }
+
+    public class AttendanceRow
+    {
+        public string DateText { get; set; }
+        public string TimeText { get; set; }
+        public string Title { get; set; }
+        public string Trainer { get; set; }
+        public string Hall { get; set; }
+        public int Booked { get; set; }
+        public int Came { get; set; }
+        public int Missed { get; set; }
+    }
+
+    public class SalesRow
+    {
+        public string DateText { get; set; }
+        public string Client { get; set; }
+        public string Type { get; set; }
+        public string AmountText { get; set; }
+    }
+
+    /// <summary>Вспомогательные операции форматирования.</summary>
+    public static class Fmt
     {
         private static readonly CultureInfo Ru = CultureInfo.GetCultureInfo("ru-RU");
 
-        public static string FormatDate(DateTime date)
+        public static string Date(DateTime date)
+        {
+            return date.ToString("dd.MM.yyyy", Ru);
+        }
+
+        public static string DateLong(DateTime date)
         {
             return date.ToString("d MMMM yyyy", Ru);
         }
 
-        public static List<LessonRow> Lessons()
+        public static string Weekday(DateTime date)
         {
-            var today = DateTime.Today;
-            return new List<LessonRow>
-            {
-                new LessonRow
-                {
-                    When = today.AddDays(1).ToString("dd.MM, ddd", Ru) + " · 09:00",
-                    Title = "Силовая тренировка",
-                    Trainer = "Петров",
-                    Hall = "Тренажёрный зал",
-                    Seats = "18 из 30"
-                },
-                new LessonRow
-                {
-                    When = today.AddDays(1).ToString("dd.MM, ddd", Ru) + " · 18:00",
-                    Title = "Интервальный кардио-тренинг",
-                    Trainer = "Смирнова",
-                    Hall = "Тренажёрный зал",
-                    Seats = "25 из 30"
-                },
-                new LessonRow
-                {
-                    When = today.AddDays(2).ToString("dd.MM, ddd", Ru) + " · 11:00",
-                    Title = "Функциональный тренинг",
-                    Trainer = "Кузнецов",
-                    Hall = "Зал групповых программ",
-                    Seats = "17 из 20"
-                },
-                new LessonRow
-                {
-                    When = today.AddDays(2).ToString("dd.MM, ddd", Ru) + " · 20:00",
-                    Title = "Стретчинг",
-                    Trainer = "Иванова",
-                    Hall = "Зал групповых программ",
-                    Seats = "12 из 20"
-                },
-                new LessonRow
-                {
-                    When = today.AddDays(3).ToString("dd.MM, ddd", Ru) + " · 18:00",
-                    Title = "Аквааэробика",
-                    Trainer = "Волкова",
-                    Hall = "Бассейн",
-                    Seats = "15 из 25"
-                }
-            };
+            return date.ToString("ddd", Ru);
         }
 
-        public static List<ClientRow> Clients()
+        public static string Money(decimal value)
         {
-            return new List<ClientRow>
-            {
-                new ClientRow { Familiya = "Иванов", Imya = "Алексей", Telefon = "+7 900 123-45-01",
-                    Abonement = "Месячный безлимит", Status = "Действует" },
-                new ClientRow { Familiya = "Петрова", Imya = "Мария", Telefon = "+7 900 123-45-02",
-                    Abonement = "Месячный безлимит", Status = "Действует" },
-                new ClientRow { Familiya = "Сидоров", Imya = "Дмитрий", Telefon = "+7 900 123-45-03",
-                    Abonement = "Студенческий месяц", Status = "Действует" },
-                new ClientRow { Familiya = "Кузнецова", Imya = "Анна", Telefon = "+7 900 123-45-04",
-                    Abonement = "Годовой безлимит", Status = "Действует" },
-                new ClientRow { Familiya = "Смирнов", Imya = "Игорь", Telefon = "+7 900 123-45-05",
-                    Abonement = "Разовое посещение", Status = "Действует" },
-                new ClientRow { Familiya = "Волкова", Imya = "Екатерина", Telefon = "+7 900 123-45-06",
-                    Abonement = "Месячный безлимит", Status = "Действует" },
-                new ClientRow { Familiya = "Морозов", Imya = "Павел", Telefon = "+7 900 123-45-07",
-                    Abonement = "Месяц: утро", Status = "Истёк" },
-                new ClientRow { Familiya = "Лебедева", Imya = "Ольга", Telefon = "+7 900 123-45-08",
-                    Abonement = "Месячный безлимит", Status = "Действует" },
-                new ClientRow { Familiya = "Новиков", Imya = "Сергей", Telefon = "+7 900 123-45-09",
-                    Abonement = "Студенческий месяц", Status = "Действует" },
-                new ClientRow { Familiya = "Соколова", Imya = "Виктория", Telefon = "+7 900 123-45-10",
-                    Abonement = "Месячный безлимит", Status = "Истёк" }
-            };
+            return value.ToString("N0", Ru) + " ₽";
+        }
+
+        public static string MoneyPlain(decimal value)
+        {
+            return value.ToString("0.00", CultureInfo.InvariantCulture);
         }
     }
 }

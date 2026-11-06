@@ -1,0 +1,153 @@
+<Window x:Class="FitnessClub.ReportsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Фитнес-клуб — Отчёты"
+        Width="1220" Height="840"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BgBrush}"
+        FontFamily="{StaticResource AppFont}"
+        TextOptions.TextFormattingMode="Display">
+
+    <Border Background="{StaticResource BgBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{StaticResource PanelBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Grid Margin="28,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="ФИТНЕС-КЛУБ" FontSize="16" FontWeight="Bold"
+                                   Foreground="{StaticResource AccentSoftBrush}"/>
+                        <Rectangle Width="1" Height="20" Fill="{StaticResource BorderBrush}" Margin="18,0"/>
+                        <TextBlock Text="Отчёты" FontSize="13"
+                                   Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock x:Name="UserText" FontSize="13"
+                                   Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
+                        <Button Content="Назад" Style="{StaticResource GhostButton}"
+                                Margin="18,0,10,0" Click="Back_Click"/>
+                        <Button Content="✕" Style="{StaticResource CloseButton}" Click="Back_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="32,22,32,22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Отчёты" Style="{StaticResource H1}" FontSize="26"/>
+                    <TextBlock Text="Посещаемость занятий и продажи абонементов за период."
+                               Style="{StaticResource Muted}" Margin="0,6,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Style="{StaticResource Card}" Padding="16,14" Margin="0,16,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="230"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="С даты" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="FromBox" Grid.Column="1" Style="{StaticResource InputBox}"
+                                 Height="36" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Grid.Column="2" Text="По дату" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="14,0,8,0"/>
+                        <TextBox x:Name="ToBox" Grid.Column="3" Style="{StaticResource InputBox}"
+                                 Height="36" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Grid.Column="4" Text="Отчёт" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center" Margin="14,0,8,0"/>
+                        <ComboBox x:Name="TypeCombo" Grid.Column="5" Style="{StaticResource ComboInput}"
+                                  Height="36" SelectedIndex="0">
+                            <ComboBoxItem Content="Посещаемость занятий"/>
+                            <ComboBoxItem Content="Продажи абонементов"/>
+                        </ComboBox>
+
+                        <StackPanel Grid.Column="6" Orientation="Horizontal" Margin="14,0,0,0">
+                            <Button Content="Сформировать" Style="{StaticResource PrimaryButton}"
+                                    Height="36" Width="140" Click="Build_Click"/>
+                            <Button Content="Экспорт CSV" Style="{StaticResource SecondaryButton}"
+                                    Height="36" Width="130" Margin="8,0,0,0" Click="Export_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Style="{StaticResource Card}" Padding="18,12" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock x:Name="SummaryTitle" Text="Период" Style="{StaticResource Muted}"/>
+                            <TextBlock x:Name="SummaryPeriod" FontSize="15" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextBrush}" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="SummaryLabel2" Text="Записей" Style="{StaticResource Muted}"/>
+                            <TextBlock x:Name="SummaryValue2" FontSize="20" FontWeight="Bold"
+                                       Foreground="{StaticResource AccentSoftBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock x:Name="SummaryLabel3" Text="Итого" Style="{StaticResource Muted}"/>
+                            <TextBlock x:Name="SummaryValue3" FontSize="20" FontWeight="Bold"
+                                       Foreground="{StaticResource AccentSoftBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="3">
+                    <DataGrid x:Name="AttendanceGrid" Style="{StaticResource DarkDataGrid}"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding DateText}" Width="100"/>
+                            <DataGridTextColumn Header="Время" Binding="{Binding TimeText}" Width="70"/>
+                            <DataGridTextColumn Header="Занятие" Binding="{Binding Title}" Width="*"/>
+                            <DataGridTextColumn Header="Тренер" Binding="{Binding Trainer}" Width="120"/>
+                            <DataGridTextColumn Header="Зал" Binding="{Binding Hall}" Width="180"/>
+                            <DataGridTextColumn Header="Записано" Binding="{Binding Booked}" Width="95"/>
+                            <DataGridTextColumn Header="Пришёл" Binding="{Binding Came}" Width="85"/>
+                            <DataGridTextColumn Header="Не пришёл" Binding="{Binding Missed}" Width="95"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="SalesGrid" Style="{StaticResource DarkDataGrid}"
+                              Visibility="Collapsed"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding DateText}" Width="120"/>
+                            <DataGridTextColumn Header="Клиент" Binding="{Binding Client}" Width="*"/>
+                            <DataGridTextColumn Header="Тип абонемента" Binding="{Binding Type}" Width="300"/>
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding AmountText}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+                <TextBlock Grid.Row="4" x:Name="FooterText" Style="{StaticResource Muted}"
+                           Margin="0,10,0,0"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -1,15 +1,28 @@
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace FitnessClub
 {
-    /// <summary>Окно авторизации. Демонстрационные учётные записи: admin/admin и client/client.</summary>
+    /// <summary>Окно авторизации.</summary>
     public partial class LoginWindow : Window
     {
         public LoginWindow()
         {
             InitializeComponent();
-            Loaded += (s, e) => LoginBox.Focus();
+            Loaded += (s, e) =>
+            {
+                LoginBox.Focus();
+            };
+        }
+
+        private static string Shorten(string text, int length)
+        {
+            if (string.IsNullOrEmpty(text) || text.Length <= length)
+            {
+                return text;
+            }
+            return text.Substring(0, length) + "…";
         }
 
         private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -32,11 +45,13 @@ namespace FitnessClub
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                "Регистрация нового клиента (демонстрационный режим).",
-                "Фитнес-клуб",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            var registration = new RegisterWindow { Owner = this };
+            if (registration.ShowDialog() == true)
+            {
+                var client = new ClientMainWindow();
+                client.Show();
+                Close();
+            }
         }
 
         private void LoginBox_KeyDown(object sender, KeyEventArgs e)
@@ -68,24 +83,15 @@ namespace FitnessClub
                 return;
             }
 
-            if (login == "admin" && password == "admin")
+            string error;
+            if (!Store.Login(login, password, out error))
             {
-                Open(new AdminMainWindow());
+                ShowError(error);
                 return;
             }
 
-            if (login == "client" && password == "client")
-            {
-                Open(new ClientMainWindow());
-                return;
-            }
-
-            ShowError("Неверный логин или пароль");
-        }
-
-        private void Open(Window window)
-        {
-            window.Show();
+            Window next = Session.IsAdmin ? (Window)new AdminMainWindow() : new ClientMainWindow();
+            next.Show();
             Close();
         }
 

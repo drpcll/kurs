@@ -40,13 +40,15 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock Text="Смирнова"
+                        <TextBlock x:Name="UserText"
                                    FontFamily="{StaticResource AppFont}"
                                    FontSize="13"
                                    Foreground="{StaticResource TextBrush}"
                                    VerticalAlignment="Center"/>
+                        <Button Content="Обновить" Style="{StaticResource GhostButton}"
+                                Margin="18,0,0,0" Click="Refresh_Click"/>
                         <Button Content="Выход" Style="{StaticResource GhostButton}"
-                                Margin="18,0,10,0" Click="Logout_Click"/>
+                                Margin="6,0,10,0" Click="Logout_Click"/>
                         <Button Content="✕" Style="{StaticResource CloseButton}"
                                 Click="Close_Click"/>
                     </StackPanel>
@@ -54,13 +56,14 @@
             </Border>
 
             <!-- Содержимое -->
-            <Grid Grid.Row="1" Margin="36,26,36,26">
+            <Grid Grid.Row="1" Margin="36,24,36,24">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
@@ -69,13 +72,13 @@
                                Style="{StaticResource Muted}" FontSize="14" Margin="0,8,0,0"/>
                 </StackPanel>
 
-                <UniformGrid Grid.Row="1" Columns="4" Margin="0,24,0,0">
+                <UniformGrid Grid.Row="1" Columns="4" Margin="0,22,0,0">
                     <Border Background="{StaticResource PanelBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1" CornerRadius="12"
-                            Padding="20,16" Margin="0,0,14,0">
+                            Padding="20,14" Margin="0,0,14,0">
                         <StackPanel>
-                            <TextBlock Text="10" FontSize="26" FontWeight="Bold"
+                            <TextBlock x:Name="ClientCountText" Text="0" FontSize="26" FontWeight="Bold"
                                        Foreground="{StaticResource AccentSoftBrush}"/>
                             <TextBlock Text="клиентов" Style="{StaticResource Muted}"
                                        Margin="0,4,0,0"/>
@@ -84,20 +87,20 @@
                     <Border Background="{StaticResource PanelBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1" CornerRadius="12"
-                            Padding="20,16" Margin="0,0,14,0">
+                            Padding="20,14" Margin="0,0,14,0">
                         <StackPanel>
-                            <TextBlock Text="12" FontSize="26" FontWeight="Bold"
+                            <TextBlock x:Name="MembershipCountText" Text="0" FontSize="26" FontWeight="Bold"
                                        Foreground="{StaticResource AccentSoftBrush}"/>
-                            <TextBlock Text="абонементов" Style="{StaticResource Muted}"
+                            <TextBlock Text="действующих абонементов" Style="{StaticResource Muted}"
                                        Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
                     <Border Background="{StaticResource PanelBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1" CornerRadius="12"
-                            Padding="20,16" Margin="0,0,14,0">
+                            Padding="20,14" Margin="0,0,14,0">
                         <StackPanel>
-                            <TextBlock Text="14" FontSize="26" FontWeight="Bold"
+                            <TextBlock x:Name="LessonCountText" Text="0" FontSize="26" FontWeight="Bold"
                                        Foreground="{StaticResource AccentSoftBrush}"/>
                             <TextBlock Text="занятий в расписании" Style="{StaticResource Muted}"
                                        Margin="0,4,0,0"/>
@@ -106,9 +109,9 @@
                     <Border Background="{StaticResource PanelBrush}"
                             BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1" CornerRadius="12"
-                            Padding="20,16">
+                            Padding="20,14">
                         <StackPanel>
-                            <TextBlock Text="8" FontSize="26" FontWeight="Bold"
+                            <TextBlock x:Name="TrainerCountText" Text="0" FontSize="26" FontWeight="Bold"
                                        Foreground="{StaticResource AccentSoftBrush}"/>
                             <TextBlock Text="тренеров" Style="{StaticResource Muted}"
                                        Margin="0,4,0,0"/>
@@ -116,9 +119,9 @@
                     </Border>
                 </UniformGrid>
 
-                <UniformGrid Grid.Row="2" Columns="4" Margin="0,18,0,0">
-                    <Button Style="{StaticResource TileButton}" Height="86"
-                            Tag="Клиенты" Click="Tile_Click">
+                <UniformGrid Grid.Row="2" Columns="4" Margin="0,16,0,0">
+                    <Button Style="{StaticResource TileButton}" Height="82"
+                            Tag="Clients" Click="Tile_Click">
                         <StackPanel>
                             <TextBlock Text="Клиенты" FontSize="15" FontWeight="SemiBold"
                                        Foreground="{StaticResource TextBrush}"/>
@@ -126,8 +129,8 @@
                                        Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource TileButton}" Height="86"
-                            Tag="Абонементы" Click="Tile_Click">
+                    <Button Style="{StaticResource TileButton}" Height="82"
+                            Tag="Memberships" Click="Tile_Click">
                         <StackPanel>
                             <TextBlock Text="Абонементы" FontSize="15" FontWeight="SemiBold"
                                        Foreground="{StaticResource TextBrush}"/>
@@ -135,8 +138,8 @@
                                        Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource TileButton}" Height="86"
-                            Tag="Расписание" Click="Tile_Click">
+                    <Button Style="{StaticResource TileButton}" Height="82"
+                            Tag="Schedule" Click="Tile_Click">
                         <StackPanel>
                             <TextBlock Text="Расписание" FontSize="15" FontWeight="SemiBold"
                                        Foreground="{StaticResource TextBrush}"/>
@@ -144,8 +147,8 @@
                                        Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button Style="{StaticResource TileButton}" Height="86" Margin="0"
-                            Tag="Отчёты" Click="Tile_Click">
+                    <Button Style="{StaticResource TileButton}" Height="82" Margin="0"
+                            Tag="Reports" Click="Tile_Click">
                         <StackPanel>
                             <TextBlock Text="Отчёты" FontSize="15" FontWeight="SemiBold"
                                        Foreground="{StaticResource TextBrush}"/>
@@ -155,8 +158,18 @@
                     </Button>
                 </UniformGrid>
 
-                <TextBlock Grid.Row="3" Text="Клиенты клуба" Style="{StaticResource H2}"
-                           Margin="0,24,0,10"/>
+                <Grid Grid.Row="3" Margin="0,22,0,10">
+                    <TextBlock Text="Клиенты клуба" Style="{StaticResource H2}" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBox x:Name="SearchBox" Style="{StaticResource InputBox}"
+                                 Width="240" Height="34" VerticalContentAlignment="Center"
+                                 KeyDown="SearchBox_KeyDown"/>
+                        <Button Content="Найти" Style="{StaticResource SecondaryButton}"
+                                Height="34" Margin="8,0,0,0" Click="Search_Click"/>
+                        <Button Content="Сбросить" Style="{StaticResource GhostButton}"
+                                Height="34" Margin="6,0,0,0" Click="ResetSearch_Click"/>
+                    </StackPanel>
+                </Grid>
 
                 <DataGrid Grid.Row="4"
                           x:Name="ClientsGrid"
@@ -164,17 +177,22 @@
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Фамилия" Binding="{Binding Familiya}"
-                                            Width="160"/>
+                                            Width="150"/>
                         <DataGridTextColumn Header="Имя" Binding="{Binding Imya}"
-                                            Width="140"/>
+                                            Width="130"/>
                         <DataGridTextColumn Header="Телефон" Binding="{Binding Telefon}"
-                                            Width="180"/>
+                                            Width="150"/>
                         <DataGridTextColumn Header="Абонемент" Binding="{Binding Abonement}"
                                             Width="*"/>
                         <DataGridTextColumn Header="Статус" Binding="{Binding Status}"
-                                            Width="130"/>
+                                            Width="120"/>
+                        <DataGridTextColumn Header="Логин" Binding="{Binding Login}"
+                                            Width="120"/>
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <TextBlock Grid.Row="5" x:Name="FooterText" Style="{StaticResource Muted}"
+                           Margin="0,10,0,0"/>
             </Grid>
         </Grid>
     </Border>
